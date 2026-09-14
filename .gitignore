@@ -30,11 +30,12 @@ frontend/build/
 *~
 
 # Data
-*.csv
 *.pkl
-data/
 *.db
 *.sqlite
+
+# Allow demo data
+!backend/data/*.csv
 
 # Environment
 .env
