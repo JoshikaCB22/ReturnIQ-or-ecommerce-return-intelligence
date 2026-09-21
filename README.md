@@ -22,7 +22,7 @@ ReturnIQ is a production-quality ML-powered platform that helps e-commerce busin
 - **ML**: Scikit-learn + CatBoost + SHAP
 - **Data**: Pandas + NumPy
 - **Database**: SQLite (PostgreSQL-ready)
-- **Visualization**: Recharts + Plotly
+- **Visualization**: Recharts + Interactive Reports
 
 ## System Architecture
 
@@ -77,6 +77,17 @@ npm run dev
 ```
 
 Access the application at `http://localhost:5173`
+
+## Visualization
+
+This application features **Recharts for all data visualizations**, providing interactive and responsive charts throughout the dashboard.
+
+### Key Features:
+- **Interactive Charts**: Recharts library with hover effects and tooltips
+- **Responsive Design**: Charts adapt to any screen size
+- **Real-time Updates**: Visualizations update with live data from the backend
+- **Multiple Chart Types**: Line, Bar, Pie, and more chart types used throughout
+- **No Authentication Required**: Works without additional services or accounts
 
 ## Project Structure
 

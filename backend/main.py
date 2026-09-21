@@ -4,6 +4,8 @@ from pydantic import BaseModel
 from typing import Optional, List, Dict, Any
 import pandas as pd
 import json
+import os
+from datetime import datetime, timedelta
 
 from models import ReturnRiskModel
 from data_pipeline import DataPipeline
@@ -335,6 +337,157 @@ def get_data_quality():
         return quality_report
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+# ==================== POWER BI ENDPOINTS ====================
+
+class PowerBITokenResponse(BaseModel):
+    token: str
+    expiration: int
+
+def generate_powerbi_token(report_type: str = "dashboard") -> Dict[str, Any]:
+    """
+    Generate a Power BI embed token for the specified report
+    In production, use Microsoft Power BI REST API or SDK to generate actual tokens
+    For now, returns a mock token with expiration time
+    """
+    try:
+        # Get Power BI credentials from environment variables
+        workspace_id = os.getenv("POWERBI_WORKSPACE_ID", "")
+        report_id = os.getenv(f"POWERBI_{report_type.upper()}_REPORT_ID", "")
+        
+        if not workspace_id or not report_id:
+            raise ValueError(f"Power BI configuration missing for {report_type}")
+        
+        # In production, generate actual token using:
+        # from azure.identity import ClientSecretCredential
+        # from azure.core.exceptions import AzureError
+        
+        # For demo purposes, create a mock token
+        # Real implementation would call Power BI REST API
+        token = f"demo_token_{report_type}_{int(datetime.now().timestamp())}"
+        expiration = int((datetime.now() + timedelta(hours=1)).timestamp() * 1000)
+        
+        return {
+            "token": token,
+            "expiration": expiration,
+            "reportId": report_id,
+            "workspaceId": workspace_id
+        }
+    except Exception as e:
+        print(f"Error generating Power BI token: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to generate Power BI token: {str(e)}")
+
+@app.get("/api/powerbi/token")
+def get_powerbi_token(reportType: str = "dashboard") -> PowerBITokenResponse:
+    """
+    Get Power BI embed token for a specific report
+    
+    Query Parameters:
+    - reportType: Type of report (dashboard, riskAnalysis, productIntelligence, modelPerformance)
+    
+    Returns:
+    - token: Power BI embed token
+    - expiration: Token expiration time in milliseconds
+    """
+    try:
+        token_data = generate_powerbi_token(reportType)
+        
+        return PowerBITokenResponse(
+            token=token_data["token"],
+            expiration=token_data["expiration"]
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/powerbi/embed-config")
+def get_powerbi_embed_config(reportType: str = "dashboard") -> Dict[str, Any]:
+    """
+    Get complete embed configuration for Power BI report
+    
+    Query Parameters:
+    - reportType: Type of report
+    
+    Returns:
+    - Configuration including token, report ID, workspace ID, and embed URL
+    """
+    try:
+        config = generate_powerbi_token(reportType)
+        
+        return {
+            "type": "report",
+            "id": config["reportId"],
+            "accessToken": config["token"],
+            "embedUrl": f"https://app.powerbi.com/reportEmbed?reportId={config['reportId']}&groupId={config['workspaceId']}",
+            "tokenExpiry": config["expiration"],
+            "permissions": ["View", "Create", "Edit"],
+            "settings": {
+                "filterPaneEnabled": True,
+                "navContentPaneEnabled": True,
+                "persistentFilters": True
+            }
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/powerbi/refresh-token")
+def refresh_powerbi_token(reportType: str = "dashboard") -> PowerBITokenResponse:
+    """
+    Refresh an expired Power BI token
+    
+    Query Parameters:
+    - reportType: Type of report
+    
+    Returns:
+    - New token and expiration time
+    """
+    try:
+        token_data = generate_powerbi_token(reportType)
+        
+        return PowerBITokenResponse(
+            token=token_data["token"],
+            expiration=token_data["expiration"]
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/powerbi/status")
+def get_powerbi_status() -> Dict[str, Any]:
+    """
+    Check Power BI service status and configuration
+    
+    Returns:
+    - Service status
+    - Configured reports
+    - Environment setup status
+    """
+    try:
+        workspace_id = os.getenv("POWERBI_WORKSPACE_ID")
+        client_id = os.getenv("POWERBI_CLIENT_ID")
+        tenant_id = os.getenv("POWERBI_TENANT_ID")
+        
+        configured_reports = {}
+        for report_type in ["dashboard", "riskAnalysis", "productIntelligence", "modelPerformance"]:
+            report_id = os.getenv(f"POWERBI_{report_type.upper()}_REPORT_ID")
+            configured_reports[report_type] = bool(report_id)
+        
+        return {
+            "status": "operational",
+            "workspace_configured": bool(workspace_id),
+            "authentication_configured": bool(client_id and tenant_id),
+            "reports_configured": configured_reports,
+            "configuration_complete": all([
+                workspace_id,
+                client_id,
+                tenant_id,
+                any(configured_reports.values())
+            ])
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "error": str(e),
+            "configuration_complete": False
+        }
 
 if __name__ == "__main__":
     import uvicorn

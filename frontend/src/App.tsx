@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom'
 import { 
-  Home, TrendingUp, Package, Users, DollarSign, 
+  Home, TrendingUp, Package, Users, 
   Sliders, AlertTriangle, Database, BarChart3 
 } from 'lucide-react'
 import Dashboard from './pages/Dashboard'

@@ -123,7 +123,7 @@ export default function Dashboard() {
                 outerRadius={100}
                 label
               >
-                {returnReasons.map((entry, index) => (
+                {returnReasons.map((_, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
