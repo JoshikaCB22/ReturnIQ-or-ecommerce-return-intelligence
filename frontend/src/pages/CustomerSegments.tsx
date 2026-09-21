@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Users } from 'lucide-react'
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts'
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts'
 
 export default function CustomerSegments() {
   const [segments, setSegments] = useState<any[]>([])
@@ -79,7 +79,7 @@ export default function CustomerSegments() {
                 outerRadius={100}
                 dataKey="value"
               >
-                {pieData.map((entry, index) => (
+                {pieData.map((_, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
