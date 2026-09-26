@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: returniq-backend
+    env: python
+    plan: free
+    buildCommand: "cd backend && pip install -r requirements.txt"
+    startCommand: "cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11"
+      - key: PORT
+        value: "10000"
+    routes:
+      - path: /api
+        destination: http://localhost:10000/api
+
+  - type: static
+    name: returniq-frontend
+    staticPublishPath: frontend/dist
+    buildCommand: "cd frontend && npm install && npm run build"
+    envVars:
+      - key: REACT_APP_API_URL
+        value: "https://returniq-backend.onrender.com"
