@@ -17,6 +17,7 @@ export default function DataQuality() {
     } catch (error) {
       console.error('Failed to load data quality:', error)
       setQuality(null)
+    } finally {
       setLoading(false)
     }
   }

@@ -30,7 +30,15 @@ export default function Dashboard() {
         return Array.isArray(data) ? data : data
       }
 
-      setKpis(kpisRes.data)
+      // For KPIs, handle both plain object and Azure-wrapped
+      const kpisData = kpisRes.data && typeof kpisRes.data === 'object' && 'value' in kpisRes.data && typeof kpisRes.data.value === 'object'
+        ? kpisRes.data.value
+        : kpisRes.data
+
+      console.log('KPIs data:', kpisData)
+      console.log('Trends data:', trendsRes.data)
+      
+      setKpis(kpisData)
       setTrends(extractData(trendsRes.data))
       setCategoryData(extractData(categoryRes.data))
       setReturnReasons(extractData(reasonsRes.data))
