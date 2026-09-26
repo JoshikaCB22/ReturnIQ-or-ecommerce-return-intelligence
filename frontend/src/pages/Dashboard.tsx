@@ -22,10 +22,18 @@ export default function Dashboard() {
         apiClient.get('/dashboard/return-reasons')
       ])
 
+      // Handle both plain arrays and Azure-wrapped format
+      const extractData = (data: any) => {
+        if (data && typeof data === 'object' && 'value' in data && Array.isArray(data.value)) {
+          return data.value
+        }
+        return Array.isArray(data) ? data : data
+      }
+
       setKpis(kpisRes.data)
-      setTrends(trendsRes.data)
-      setCategoryData(categoryRes.data)
-      setReturnReasons(reasonsRes.data)
+      setTrends(extractData(trendsRes.data))
+      setCategoryData(extractData(categoryRes.data))
+      setReturnReasons(extractData(reasonsRes.data))
     } catch (error) {
       console.error('Failed to load dashboard data:', error)
     } finally {
