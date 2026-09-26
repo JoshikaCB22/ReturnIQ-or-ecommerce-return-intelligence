@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios'
+import { apiClient } from '../services/api'
 import { Package, TrendingDown } from 'lucide-react'
 
 export default function ProductIntelligence() {
@@ -12,7 +12,7 @@ export default function ProductIntelligence() {
 
   const loadProducts = async () => {
     try {
-      const response = await axios.get('/api/products/health')
+      const response = await apiClient.get('/products/health')
       setProducts(response.data)
     } catch (error) {
       console.error('Failed to load products:', error)

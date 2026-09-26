@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
-import axios from 'axios'
+import { apiClient } from '../services/api'
 
 export default function Dashboard() {
   const [kpis, setKpis] = useState<any>(null)
@@ -16,10 +16,10 @@ export default function Dashboard() {
   const loadData = async () => {
     try {
       const [kpisRes, trendsRes, categoryRes, reasonsRes] = await Promise.all([
-        axios.get('/api/dashboard/kpis'),
-        axios.get('/api/dashboard/trends'),
-        axios.get('/api/dashboard/return-by-category'),
-        axios.get('/api/dashboard/return-reasons')
+        apiClient.get('/dashboard/kpis'),
+        apiClient.get('/dashboard/trends'),
+        apiClient.get('/dashboard/return-by-category'),
+        apiClient.get('/dashboard/return-reasons')
       ])
 
       setKpis(kpisRes.data)
