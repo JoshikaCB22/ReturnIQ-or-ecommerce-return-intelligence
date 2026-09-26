@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import axios from 'axios'
+import { apiClient } from '../services/api'
 import { Sliders, TrendingDown, DollarSign } from 'lucide-react'
 
 export default function Simulator() {
@@ -24,7 +24,7 @@ export default function Simulator() {
   const handleSimulate = async () => {
     setLoading(true)
     try {
-      const response = await axios.post('/api/simulate/what-if', simulation)
+      const response = await apiClient.post('/simulate/what-if', simulation)
       setResult(response.data)
     } catch (error) {
       console.error('Simulation failed:', error)

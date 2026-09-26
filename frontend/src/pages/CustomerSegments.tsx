@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios'
+import { apiClient } from '../services/api'
 import { Users } from 'lucide-react'
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts'
 
@@ -13,7 +13,7 @@ export default function CustomerSegments() {
 
   const loadSegments = async () => {
     try {
-      const response = await axios.get('/api/customers/segments')
+      const response = await apiClient.get('/customers/segments')
       setSegments(response.data)
     } catch (error) {
       console.error('Failed to load customer segments:', error)

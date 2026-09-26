@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import axios from 'axios'
+import { apiClient } from '../services/api'
 import { AlertCircle, TrendingUp, DollarSign } from 'lucide-react'
 
 export default function RiskAnalysis() {
@@ -24,7 +24,7 @@ export default function RiskAnalysis() {
     setLoading(true)
     
     try {
-      const response = await axios.post('/api/predict/order', formData)
+      const response = await apiClient.post('/predict/order', formData)
       setPrediction(response.data)
     } catch (error) {
       console.error('Prediction failed:', error)

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios'
+import { apiClient } from '../services/api'
 import { Database, CheckCircle, XCircle } from 'lucide-react'
 
 export default function DataQuality() {
@@ -12,7 +12,7 @@ export default function DataQuality() {
 
   const loadQuality = async () => {
     try {
-      const response = await axios.get('/api/data/quality')
+      const response = await apiClient.get('/data/quality')
       setQuality(response.data)
       setLoading(false)
     } catch (error) {

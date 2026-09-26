@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios'
+import { apiClient } from '../services/api'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { BarChart3 } from 'lucide-react'
 
@@ -13,7 +13,7 @@ export default function ModelPerformance() {
 
   const loadMetrics = async () => {
     try {
-      const response = await axios.get('/api/model/performance')
+      const response = await apiClient.get('/model/performance')
       setMetrics(response.data)
     } catch (error) {
       console.error('Failed to load model metrics:', error)

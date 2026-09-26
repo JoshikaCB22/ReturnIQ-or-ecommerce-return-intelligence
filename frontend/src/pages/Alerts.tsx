@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios'
+import { apiClient } from '../services/api'
 import { AlertTriangle, AlertCircle } from 'lucide-react'
 
 export default function Alerts() {
@@ -12,7 +12,7 @@ export default function Alerts() {
 
   const loadAlerts = async () => {
     try {
-      const response = await axios.get('/api/alerts')
+      const response = await apiClient.get('/alerts')
       setAlerts(response.data)
     } catch (error) {
       console.error('Failed to load alerts:', error)
