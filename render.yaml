@@ -16,8 +16,9 @@ services:
 
   - type: static
     name: returniq-frontend
-    staticPublishPath: frontend/dist
-    buildCommand: "cd frontend && npm install && npm run build"
+    rootDir: frontend
+    staticPublishPath: dist
+    buildCommand: "npm install && npm run build"
     envVars:
-      - key: REACT_APP_API_URL
+      - key: VITE_API_URL
         value: "https://returniq-backend.onrender.com"
