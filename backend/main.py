@@ -115,7 +115,8 @@ def get_trends():
         trends['return_rate'] = (trends['returned'] / trends['order_id'] * 100).round(2)
         trends['month'] = trends['order_date'].astype(str)
         
-        return trends[['month', 'order_id', 'returned', 'return_rate']].to_dict('records')
+        result = trends[['month', 'order_id', 'returned', 'return_rate']].to_dict('records')
+        return [dict(row) for row in result]
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -132,7 +133,8 @@ def get_return_by_category():
         category_stats['return_rate'] = (category_stats['returned'] / category_stats['order_id'] * 100).round(2)
         category_stats.columns = ['category', 'total_orders', 'returns', 'return_rate']
         
-        return category_stats.to_dict('records')
+        result = category_stats.to_dict('records')
+        return [dict(row) for row in result]
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
