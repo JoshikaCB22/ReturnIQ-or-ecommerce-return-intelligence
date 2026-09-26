@@ -14,7 +14,11 @@ export default function CustomerSegments() {
   const loadSegments = async () => {
     try {
       const response = await apiClient.get('/customers/segments')
-      setSegments(response.data)
+      // Handle both plain arrays and Azure-wrapped format
+      const data = response.data && typeof response.data === 'object' && 'value' in response.data && Array.isArray(response.data.value)
+        ? response.data.value
+        : Array.isArray(response.data) ? response.data : response.data
+      setSegments(data)
     } catch (error) {
       console.error('Failed to load customer segments:', error)
     } finally {

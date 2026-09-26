@@ -14,7 +14,6 @@ export default function DataQuality() {
     try {
       const response = await apiClient.get('/data/quality')
       setQuality(response.data)
-      setLoading(false)
     } catch (error) {
       console.error('Failed to load data quality:', error)
       setQuality(null)

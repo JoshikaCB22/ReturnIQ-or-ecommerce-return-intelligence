@@ -13,7 +13,11 @@ export default function Alerts() {
   const loadAlerts = async () => {
     try {
       const response = await apiClient.get('/alerts')
-      setAlerts(response.data)
+      // Handle both plain arrays and Azure-wrapped format
+      const data = response.data && typeof response.data === 'object' && 'value' in response.data && Array.isArray(response.data.value)
+        ? response.data.value
+        : Array.isArray(response.data) ? response.data : response.data
+      setAlerts(data)
     } catch (error) {
       console.error('Failed to load alerts:', error)
     } finally {

@@ -13,7 +13,11 @@ export default function ProductIntelligence() {
   const loadProducts = async () => {
     try {
       const response = await apiClient.get('/products/health')
-      setProducts(response.data)
+      // Handle both plain arrays and Azure-wrapped format
+      const data = response.data && typeof response.data === 'object' && 'value' in response.data && Array.isArray(response.data.value)
+        ? response.data.value
+        : Array.isArray(response.data) ? response.data : response.data
+      setProducts(data)
     } catch (error) {
       console.error('Failed to load products:', error)
     } finally {
